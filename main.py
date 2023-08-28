@@ -65,30 +65,7 @@ class ODSFile:
                             except Exception as e:
                                 print(f"Error {e} whilst writing to new zipfile");
 
-
-        #Shamefully taken from https://stackoverflow.com/questions/25738523/how-to-update-one-file-inside-zip-file
-    def update_zip(self):
-
-        # generate a temp file
-        tmpfd, tmpname = tempfile.mkstemp(dir=os.path.dirname(self.output_file))
-        os.close(tmpfd)
-
-        # create a temp copy of the archive without filename            
-        with zipfile.ZipFile(self.output_file, 'r') as zin:
-            with zipfile.ZipFile(tmpname, 'w') as zout:
-                zout.comment = zin.comment # preserve the comment
-                for item in zin.infolist():
-                    if item.filename != self.new_macro_name+".xml":
-                        zout.writestr(item, zin.read(item.filename))
-
-        # replace with the temp archive
-        os.remove(self.output_file)
-        os.rename(tmpname, self.output_file)
-
-        # now add filename with its new data
-        with zipfile.ZipFile(self.output_file, mode='a', compression=zipfile.ZIP_DEFLATED) as zf:
-            zf.writestr(self.new_macro_name+".xml", self.payload)
-
+   
     def create_macro(self):
         file_content = "";
         header = '<?xml version="1.0" encoding="UTF-8"?>\n'
